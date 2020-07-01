@@ -9,50 +9,39 @@ const indexedDB =
 let db;
 //const request = indexedDB.open("budget", 1);
 
-const request = window.indexedDB.open("budgetApp", 1);
+const request = window.indexedDB.open("budget", 1);
 
-    // request.onupgradeneeded = ({ target }) => {
-    //   const db = target.result;
-
-    //   //const objectStore = db.createObjectStore("budgetApp");
-    //   objectStore.createIndex("timestamp", "timestamp");
-    // };
-
-    // request.onsuccess = event => {
-    //   console.log(request.result);
-    // };
-
-request.onupgradeneeded = function(event) {
-  let db = event.target.result;
-  db.createObjectStore("pending", { autoIncrement: true });
+request.onupgradeneeded = function (event) {
+  const db = event.target.result;
+  db.createObjectStore("budget", { autoIncrement: true });
 };
 
-request.onsuccess = function(event) {
+request.onsuccess = function (event) {
   db = event.target.result;
 
   // check if app is online before reading from db
-  if (navigator.onLine) {
-    checkDatabase();
-  }
+  // if (navigator.onLine) {
+  //   checkDatabase();
+  // }
 };
 
 request.onerror = function(event) {
   console.log("Woops! " + event.target.errorCode);
 };
 
-function saveRecord(record) {
-  const transaction = db.transaction(["pending"], "readwrite");
-  const store = transaction.objectStore("pending");
+function saveRecord (record) {
+  const transaction = db.transaction(["budget"], "readwrite");
+  const store = transaction.objectStore("budget");
 
   store.add(record);
 }
 
-function checkDatabase() {
-  const transaction = db.transaction(["pending"], "readwrite");
-  const store = transaction.objectStore("pending");
+function checkDatabase () {
+  const transaction = db.transaction(["budget"], "readwrite");
+  const store = transaction.objectStore("budget");
   const getAll = store.getAll();
 
-  getAll.onsuccess = function() {
+  getAll.onsuccess = function () {
     if (getAll.result.length > 0) {
       fetch("/api/transaction/bulk", {
         method: "POST",
@@ -65,8 +54,8 @@ function checkDatabase() {
       .then(response => response.json())
         .then(() => {
           // delete records if successful
-          const transaction = db.transaction(["pending"], "readwrite");
-          const store = transaction.objectStore("pending");
+          const transaction = db.transaction(["budget"], "readwrite");
+          const store = transaction.objectStore("budget");
           store.clear();
         });
     }
