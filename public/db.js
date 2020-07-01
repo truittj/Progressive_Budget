@@ -1,8 +1,29 @@
+const indexedDB =
+  window.indexedDB ||
+  window.mozIndexedDB ||
+  window.webkitIndexedDB ||
+  window.msIndexedDB ||
+  window.shimIndexedDB;
+
+
 let db;
-const request = indexedDB.open("budget", 1);
+//const request = indexedDB.open("budget", 1);
+
+const request = window.indexedDB.open("budgetApp", 1);
+
+    // request.onupgradeneeded = ({ target }) => {
+    //   const db = target.result;
+
+    //   //const objectStore = db.createObjectStore("budgetApp");
+    //   objectStore.createIndex("timestamp", "timestamp");
+    // };
+
+    // request.onsuccess = event => {
+    //   console.log(request.result);
+    // };
 
 request.onupgradeneeded = function(event) {
-  const db = event.target.result;
+  let db = event.target.result;
   db.createObjectStore("pending", { autoIncrement: true });
 };
 

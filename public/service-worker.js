@@ -4,6 +4,8 @@ const FILES_TO_CACHE = [
   '/index.html',
   '/manifest.webmanifest',
   '/index.js',
+  '/db.js',
+  '/styles.css',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
 ];
@@ -20,7 +22,7 @@ self.addEventListener('install', function(evt) {
       })
     );
 
-    self.skipWaiting();
+     self.skipWaiting();
   });
 
   self.addEventListener("activate", function(evt) {
@@ -61,10 +63,18 @@ self.addEventListener("fetch", function(evt) {
     return;
   }
 
-  evt.respondWith(
-    caches.match(evt.request).then(function(response) {
-      return response || fetch(evt.request);
+  event.respondWith(
+    fetch(event.request).catch(function() {
+      return caches.match(event.request).then(function(response) {
+        if (response) {
+          return response;
+        } else if (event.request.headers.get("accept").includes("text/html")) {
+          // return the cached home page for all requests for html pages
+          return caches.match("/");
+        }
+      });
     })
   );
+
 });
 
