@@ -7,7 +7,7 @@ A budget tracker that works online and off.
 
 ## Description
 
-This is a budget applicationt that can track a user's inputs while they are on or offline. The app uses IndexedDB, a Manifest, and a Service Worker to cache and store. 
+This is a budget application that can track a user's inputs while they are on or offline. The app uses IndexedDB, a Manifest, and a Service Worker to cache and store. 
 
 Landing Page
 <img src="./ScreenShot/S1.png" alt="Screen shot of application" width="50%">
